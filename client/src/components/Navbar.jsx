@@ -23,9 +23,9 @@ export default function Navbar() {
             {hamburgerOpen && (
             <motion.div className="sidenavbar" initial={{x: 1000}} animate={{x: 0}} exit={{x: 1000}}>
                 <motion.p id="x-button" onClick={() => handleHamburger()}>x</motion.p>
-                <Link to={"/"}>Home</Link> 
-                <Link to={"/bo2"}>Bo2</Link> 
-                <Link to={"/bo3"}>Bo3</Link> 
+                <Link to={"/"} onClick={() => handleHamburger()}>Home</Link> 
+                <Link to={"/bo2"} onClick={() => handleHamburger()}>Bo2</Link> 
+                <Link to={"/bo3"} onClick={() => handleHamburger()}>Bo3</Link> 
             </motion.div>)}
         </AnimatePresence>
         </>

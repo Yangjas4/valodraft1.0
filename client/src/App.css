@@ -218,13 +218,98 @@ footer > p {
 	border-radius: 8.93069px;
 	width: 300px;
 	height: 35px;
-    padding-bottom: 5px;
+	padding-bottom: 5px;
 	color: white;
 	font-weight: 400;
 	font-size: 14.4612px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    user-select: none;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	cursor: pointer;
+	user-select: none;
+}
+
+.linkshare-container {
+	margin-top: 155px;
+	display: flex;
+	justify-content: center;
+	color: white;
+}
+
+.linkshare-box > h1 {
+	font-weight: 600;
+	font-size: 36.5315px;
+	line-height: 35px;
+}
+
+.linkshare-box > h2 {
+	font-weight: 300;
+	font-size: 25px;
+}
+
+.link-box {
+	width: 875px;
+	height: 179px;
+	background: #202020;
+	border: 1px solid #ffffff;
+	border-radius: 16px;
+	margin-top: 10px;
+}
+
+.link-box > h3 {
+	font-weight: 300;
+	font-size: 36.5315px;
+	margin-left: 45px;
+	margin-top: 15px;
+}
+
+#linkinput {
+	font-weight: 300;
+	font-size: 12px;
+	width: 750px;
+	margin-left: 45px;
+	border: 1px solid #a9a9a9;
+	border-radius: 6px;
+	background-color: #202020;
+	color: white;
+	padding-left: 10px;
+}
+
+.link-container {
+	display: flex;
+}
+
+.link-container > img {
+	cursor: pointer;
+}
+
+.cancel-button {
+	display: flex;
+	gap: 5px;
+	background: #e63737;
+	border-radius: 5px;
+	width: 140px;
+	height: 35px;
+	font-weight: 500;
+	font-size: 12px;
+	align-items: center;
+	justify-content: center;
+	margin: auto;
+	margin-top: 20px;
+	padding-bottom: 10px;
+	padding-top: 7px;
+	user-select: none;
+	cursor: pointer;
+}
+
+.cancel-button > img {
+	width: 16px;
+	height: 16px;
+	padding-top: 2px;
+}
+
+#copyclipboard {
+	position: relative;
+	left: 738px;
+	top: -125px;
 }
