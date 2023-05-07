@@ -19,7 +19,7 @@ export default function Linkshare(props) {
 	}
 
 	return (
-		<div className="linkshare-container">
+		<motion.div className="linkshare-container" initial={{opacity: 0}} animate={{opacity: 100}} transition={{duration: .5}}>
 			<div className="linkshare-box">
 				<h1>WAITING FOR OPPOSING TEAM...</h1>
 				<h2>
@@ -65,6 +65,6 @@ export default function Linkshare(props) {
 					</AnimatePresence>
 				</div>
 			</div>
-		</div>
+		</motion.div>
 	);
 }
