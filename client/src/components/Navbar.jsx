@@ -3,6 +3,7 @@ import hamburger from "../assets/hamburger.png"
 import { motion, AnimatePresence } from "framer-motion"
 import { useState } from "react";
 import { Link } from "react-router-dom"
+import uniqid from "uniqid";
 
 export default function Navbar() {
     
@@ -10,7 +11,6 @@ export default function Navbar() {
 
     function handleHamburger() {
         setHamburgerOpen((prevState) => !prevState);
-        console.log(hamburgerOpen);
     }
 
     return (
@@ -24,8 +24,8 @@ export default function Navbar() {
             <motion.div className="sidenavbar" initial={{x: 1000}} animate={{x: 0}} exit={{x: 1000}}>
                 <motion.p id="x-button" onClick={() => handleHamburger()}>x</motion.p>
                 <Link to={"/"} onClick={() => handleHamburger()}>Home</Link> 
-                <Link to={"/bo2"} onClick={() => handleHamburger()}>Bo2</Link> 
-                <Link to={"/bo3"} onClick={() => handleHamburger()}>Bo3</Link> 
+                <Link to={`/bo2/${uniqid()}`} onClick={() => handleHamburger()}>New Bo2</Link> 
+                <Link to={`/bo3/${uniqid()}`} onClick={() => handleHamburger()}>New Bo3</Link> 
             </motion.div>)}
         </AnimatePresence>
         </>
