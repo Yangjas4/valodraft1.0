@@ -6,7 +6,7 @@ import { useParams } from "react-router-dom";
 import io from "socket.io-client";
 import Bo2Picks from "../components/Bo2Picks";
 
-const socket = io("http://localhost:3000", { autoConnect: false });
+const socket = io("http://localhost:3001");
 
 export default function Bo2() {
 
@@ -19,8 +19,7 @@ export default function Bo2() {
         console.log(socket);
         socket.emit("join room", roomid);
         console.log("joined room: " + roomid);
-        socket.emit("get message", "hello");
-    }, []);
+    });
 
     useEffect(() => {
         socket.on("start veto", () => {
