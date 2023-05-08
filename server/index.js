@@ -22,7 +22,7 @@ const roomSchema = new mongoose.Schema({
     draftStart: Boolean
 })
 
-const Room = mongoose.model('Room', roomSchema);
+const VetoRoom = mongoose.model('VetoRoom', roomSchema);
 
 const connectDB = async () => {
     try {
@@ -42,9 +42,21 @@ mongoose.connection.once('open', () => {
     })
 })
 
-const checkRoomExists = async (roomid) => {
+//helper functions
+const checkRoomExists = async (room) => {
     try {
-        return await Room.exists({ roomid: roomid });
+        const match = await VetoRoom.exists({roomid: room});
+        return match;
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+const newRoom = async (roomid, socketid, bo) => {
+    try {
+        const newRoom = new VetoRoom({ roomid: roomid, team1: socketid, team2: "", mapsRemaining: [], map1: "", map2: "", map3: "", map1Team1: "", map2Team1: "", map3Team1: "", mapsBanned: "", bo: bo, drafstart: false});
+        await newRoom.save();
+        console.log("new room with id: "+ roomid);
     } catch (err) {
         console.log(err);
     }
@@ -54,12 +66,14 @@ const checkRoomExists = async (roomid) => {
 io.on("connection", (socket) => {
     console.log("user connected: " + socket.id);
 
-    socket.on("join room", async (roomid) => {
-        console.log(socket.id + " joined room " + roomid);
-        if (await checkRoomExists()) {
-            socket.join(roomid);
+    socket.on("join room", async (roomInfo) => {
+        console.log(socket.id + " joined room " + roomInfo.roomid);
+        if (checkRoomExists(roomInfo.id) ) {
+            socket.join(roomInfo.roomid);
+            console.log("room exists joining room: " + roomInfo.roomid)
         } else {
-            console.log("room doesn't exist");
+            console.log("room doesn't exist, creating new room in mongodb");
+            await newRoom(roomInfo.roomid, socket.id, roomInfo.bo);
         }
     })
 })
