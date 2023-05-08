@@ -18,14 +18,23 @@ export default function Bo2() {
     useEffect(() => {
         console.log(socket);
         socket.emit("join room", {roomid: roomid, bo: 2});
-        socket.on("get room state", )
+        socket.emit("get room state", roomid);
         console.log("joined room: " + roomid);
-    });
+    }, []);
 
     useEffect(() => {
-        socket.on("start veto", () => {
-            setDraftStart(true);
-        })
+        socket.on("start veto", (roomInfo) => {
+			if (roomid === roomInfo.roomid && draftStart === false) {
+				console.log(roomInfo);
+				setDraftStart(true);
+			}
+        });
+
+		socket.on("set room state", (roomState) => {
+			if (roomid === roomState.roomid) {
+				setDraftStart(roomState);
+			}
+		})
     }, [socket]);
 
 	if (!draftStart) {
