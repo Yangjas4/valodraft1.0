@@ -32,27 +32,26 @@ export default function Linkshare(props) {
 						<input
 							type="text"
 							value={window.location.href}
-							class="field left"
-							readonly="readonly"
+							className="field left"
+							readOnly="readonly"
 							id="linkinput"
-                            onClick={() => handleCopy()}
 						/>
 						<motion.img
 							src={linkshareButton}
 							alt="copy link"
-							whileHover={{ scale: 1.1 }}
-							onClick={() => handleCopy}
+							whileTap={{ scale: 1.1 }}
+							onClick={handleCopy}
 						/>
 					</div>
 					<motion.div
 						whileHover={{ scale: 1.05 }}
 						className="cancel-button"
-						onClick={() => handleCancel()}
+						onClick={handleCancel}
 					>
 						<img src={cancel} alt="x" />
 						<p>CANCEL</p>
 					</motion.div>
-					<AnimatePresence>
+					{/* <AnimatePresence>
 						{copied && <motion.img
                             initial={{opacity: 0}}
                             animate={{opacity: 100}}
@@ -62,7 +61,7 @@ export default function Linkshare(props) {
 							alt="copied to clipboard"
 							id="copyclipboard"
 						/>}
-					</AnimatePresence>
+					</AnimatePresence> */}
 				</div>
 			</div>
 		</motion.div>
