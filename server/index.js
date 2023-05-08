@@ -43,7 +43,7 @@ mongoose.connection.once('open', () => {
 })
 
 //helper functions
-const checkRoomExists = async (room) => {
+async function checkRoomExists(room){
     try {
         const match = await VetoRoom.exists({roomid: room});
         return match;
@@ -68,7 +68,7 @@ io.on("connection", (socket) => {
 
     socket.on("join room", async (roomInfo) => {
         console.log(socket.id + " joined room " + roomInfo.roomid);
-        if (checkRoomExists(roomInfo.id) ) {
+        if (await checkRoomExists(roomInfo.roomid)) {
             socket.join(roomInfo.roomid);
             console.log("room exists joining room: " + roomInfo.roomid)
         } else {
