@@ -19,7 +19,6 @@ export default function Bo2() {
     useEffect(() => {
         console.log(socket);
         socket.emit("join room", {roomid: roomid, bo: 2});
-        socket.emit("get room state", roomid);
         console.log("joined room: " + roomid);
     }, []);
 

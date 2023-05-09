@@ -81,22 +81,15 @@ io.on("connection", (socket) => {
                 socket.emit("start veto", doc);
             }
             console.log("room exists joining room: " + roomInfo.roomid)
-
+            socket.emit("set room state", { state: doc.draftStart, roomid: doc.roomid });
         } else {
             console.log("room doesn't exist, creating new room in mongodb");
             await newRoom(roomInfo.roomid, socket.id, roomInfo.bo);
+            socket.join(roomInfo.roomid);
+            socket.emit("set room state", { state: false, roomid: roomInfo.roomid });
         }
-    });
 
-    socket.on("get room state", async (room) => {
-        const doc = await VetoRoom.findOne({ roomid: room });
-        console.log(doc);
-        if (doc === null) {
-            socket.emit("set room state", { state: false, roomid: room });
-        } else {
         socket.emit("set room state", { state: doc.draftStart, roomid: doc.roomid });
-    }
-
-})
+    });
 
 })
