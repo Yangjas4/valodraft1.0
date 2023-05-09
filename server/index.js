@@ -3,6 +3,8 @@ const app = express();
 const server = require('http').createServer(app);
 const io = require('socket.io')(server, { cors: { origin: "*", methods: ["GET", "POST"] } });
 
+const compmaps = ["ascent", "bind", "fracture", "haven", "lotus", "pearl", "split"]
+
 //mongoose
 const mongoose = require("mongoose");
 const uri = "mongodb+srv://user:123@valodraft.cccr4is.mongodb.net/ValodraftDB?retryWrites=true&w=majority";
@@ -54,7 +56,7 @@ async function checkRoomExists(room) {
 
 const newRoom = async (roomid, socketid, bo) => {
     try {
-        const newRoom = new VetoRoom({ roomid: roomid, team1: socketid, team2: "", mapsRemaining: [], map1: "", map2: "", map3: "", map1Team1: "", map2Team1: "", map3Team1: "", mapsBanned: "", bo: bo, drafStart: false });
+        const newRoom = new VetoRoom({ roomid: roomid, team1: socketid, team2: "", mapsRemaining: compmaps, map1: "", map2: "", map3: "", map1Team1: "", map2Team1: "", map3Team1: "", mapsBanned: "", bo: bo, drafStart: false });
         await newRoom.save();
         console.log("new room with id: " + roomid);
     } catch (err) {
@@ -67,10 +69,10 @@ io.on("connection", (socket) => {
     console.log("user connected: " + socket.id);
 
     socket.on("join room", async (roomInfo) => {
-        console.log(socket.id + " joined room " + roomInfo.roomid);
+        console.log(socket.id + " joined room " + roomid);
 
-        if (await checkRoomExists(roomInfo.roomid)) {
-            socket.join(roomInfo.roomid);
+        if (await checkRoomExists(roomid)) {
+            socket.join(roomid);
 
             const doc = await VetoRoom.findOne({ roomid: roomInfo.roomid });
             console.log("doc: " + doc);
@@ -78,18 +80,15 @@ io.on("connection", (socket) => {
                 doc.team2 = socket.id;
                 doc.draftStart = true;
                 await doc.save();
-                socket.emit("start veto", doc);
-            }
+                socket.to(roomInfo.roomid).emit("set room state", true);
+            } 
             console.log("room exists joining room: " + roomInfo.roomid)
-            socket.emit("set room state", { state: doc.draftStart, roomid: doc.roomid });
         } else {
             console.log("room doesn't exist, creating new room in mongodb");
             await newRoom(roomInfo.roomid, socket.id, roomInfo.bo);
             socket.join(roomInfo.roomid);
-            socket.emit("set room state", { state: false, roomid: roomInfo.roomid });
+            socket.to(roomInfo.roomid).emit("set room state", false );
         }
-
-        socket.emit("set room state", { state: doc.draftStart, roomid: doc.roomid });
     });
 
 })
