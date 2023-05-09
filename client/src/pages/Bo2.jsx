@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import io from "socket.io-client";
 import Bo2Picks from "../components/Bo2Picks";
+import loading from "../assets/loading.gif";
 
 const socket = io("http://localhost:3001");
 
@@ -13,7 +14,7 @@ export default function Bo2() {
     const params = useParams();
     const roomid = params.id;
 	let body;
-	const [draftStart, setDraftStart] = useState(false);
+	const [draftStart, setDraftStart] = useState("loading");
 
     useEffect(() => {
         console.log(socket);
@@ -32,12 +33,15 @@ export default function Bo2() {
 
 		socket.on("set room state", (roomState) => {
 			if (roomid === roomState.roomid) {
-				setDraftStart(roomState);
+				console.log(roomState.state)
+				setDraftStart(roomState.state);
 			}
 		})
     }, [socket]);
-
-	if (!draftStart) {
+	if (draftStart === "loading") {
+		body = <></>
+	}
+	else if (!draftStart) {
 		body = <Linkshare />;
 	} else {
 		body = <Bo2Picks />;

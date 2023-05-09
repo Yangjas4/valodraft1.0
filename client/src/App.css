@@ -313,3 +313,10 @@ footer > p {
 	left: 738px;
 	top: -125px;
 }
+
+#loading {
+	height: 150px;
+	width: 150px;
+	margin: auto;
+	margin-top: 200px;
+}
