@@ -7,45 +7,54 @@ import io from "socket.io-client";
 import Bo2Picks from "../components/Bo2Picks";
 import loading from "../assets/loading.gif";
 
-const socket = io("http://localhost:3001");
 
 export default function Bo2() {
 
     const params = useParams();
     const roomid = params.id;
 	let body;
-	const [roomState, setRoomState] = useState({});
+	const [socket, setSocket] = useState();
+	const [roomState, setRoomState] = useState();
+	let userid;
 
 	useEffect(() => {
-		socket.emit("join room", roomid);
-		console.log("joining room");
-		console.log(roomState);
-		socket.emit("hi", roomid);
-	}, []);
+		const s = io("http://localhost:3001");
+		setSocket(s);
+
+		return () => {
+			s.disconnect();
+		}
+	}, [])
 
 	useEffect(() => {
-		socket.on("fetch room", (roomInfo) => {
-			console.log("fetching room");
-			setRoomState(roomInfo);
-		})
-		socket.on("hi", (msg) => {
-			console.log(msg);
-		})
-	}, [socket]);
+		if (socket == undefined || roomState == undefined) return;
 
+		userid = socket.id;
+		console.log("hello");
+		socket.once("load room", room => {
+			setRoomState(room);
+		})
+
+		socket.emit("get room", roomid);
+	}, [socket, roomState, roomid]);
+
+	useEffect(() => {
+		if (roomState === undefined || socket === undefined) return;
+
+		if (roomState.draftStart === "false") {
+			body = <Linkshare />;
+		} else if (roomState.draftStart === "true"){
+			body = (
+				<>
+					<div className="bo2-container">
+						<h2>Map Veto</h2>
+						<Bo2Picks team="team b"/>
+					</div>
+				</>
+			);
+		}
+	}, [socket, roomState]);
 	
-	if (roomState.draftStart === "false") {
-		body = <Linkshare />;
-	} else if (roomState.draftStart === "true"){
-		body = (
-			<>
-				<div className="bo2-container">
-					<h2>Map Veto</h2>
-					<Bo2Picks team="team b"/>
-				</div>
-			</>
-		);
-	}
 
 	return (
 		<>

@@ -7,7 +7,7 @@ const io = require('socket.io')(server, { cors: { origin: "*" } });
 const mongoose = require("mongoose");
 const uri = "mongodb+srv://user:123@valodraft.cccr4is.mongodb.net/ValodraftDB?retryWrites=true&w=majority";
 const roomSchema = new mongoose.Schema({
-    roomid: String,
+    _id: String,
     teamA: String,
     teamB: String,
     mapsRemaining: [String],
@@ -37,19 +37,10 @@ mongoose.connection.once('open', () => {
     })
 })
 
-//helper functions
-async function checkRoomExists(room) {
-    try {
-        const match = await VetoRoom.exists({ roomid: room });
-        return match;
-    } catch (err) {
-        console.log(err);
-    }
-}
 
 const newRoom = async (roomid, socketid) => {
     try {
-        const newRoom = new VetoRoom({ roomid: roomid, teamA: socketid, teamB: "", mapsRemaining: [], maps: [], mapsTeamA: [], mapsBanned: [], drafStart: "false" });
+        const newRoom = new VetoRoom();
         await newRoom.save();
         console.log("new room with id: " + roomid);
     } catch (err) {
@@ -61,26 +52,25 @@ const newRoom = async (roomid, socketid) => {
 io.on("connection", (socket) => {
     console.log("user connected: " + socket.id);
 
-    socket.on("join room", async (roomid) => {
-
+    socket.on("get room", async (roomid) => {
+        const room = await findOrCreateRoom(roomid, socket.id);
         socket.join(roomid);
+        socket.emit("load room", room);
 
-        if (await checkRoomExists(roomid)) {
-            const room = await VetoRoom.findOne({ roomid: roomid});
-            if (room.teamB === '') {
-                room.teamB = socket.id;
-                room.draftStart = "true";
-                await room.save();
-                socket.to(roomid).emit("fetch room", room);
-            }
-        } else {
-            newRoom(roomid, socket.id)
-            const doc = await VetoRoom.findOne({ roomid: roomid });
-            socket.to(roomid).emit("fetch room", doc);
-        }
-    });
-
-    socket.on("hi", (roomid) => {
-        socket.to(roomid).emit("hi", "hello");
-    }) 
+        // socket.on()
+    })
 })
+
+async function findOrCreateRoom(id, socket) {
+    if (id === null) return;
+
+    const room = await VetoRoom.findById(id);
+    if (room) {
+        if (room.teamB = '') {
+            await VetoRoom.findByIdAndUpdate(id, {teamB: socket, draftStart: true});
+            return room;
+        }
+        return room;
+    };
+    return await VetoRoom.create({ _id: id, teamA: socket, teamB: "", mapsRemaining: [], maps: [], mapsTeamA: [], mapsBanned: [], drafStart: "false" });
+}
