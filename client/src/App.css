@@ -320,3 +320,100 @@ footer > p {
 	margin: auto;
 	margin-top: 200px;
 }
+
+path {
+	stroke-width: 3px;
+	stroke-linecap: round;
+}
+
+#bo2-grid {
+	width: 880px;
+}
+
+.bo2-mapui-container {
+	border: 1px solid #ffffff;
+	border-radius: 21px;
+	width: 1075px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	height: 510px;
+}
+
+.pick-titles {
+	display: flex;
+	font-size: 20px;
+	gap: 133px;
+	width: 100%;
+	padding-left: 97px;
+	margin-top: 60px;
+}
+
+.map-ban {
+	color: #a5a5a5;
+	font-weight: 400;
+}
+
+.map-pick {
+	color: white;
+	font-weight: 400;
+}
+
+.bo2-mapui-container > h1 {
+	color: white;
+	font-weight: 300;
+	font-size: 40px;
+	margin-top: 10px;
+}
+
+.blue {
+	color: #1aacff;
+	font-weight: 500;
+}
+
+.bo2-container {
+	color: white;
+	font-weight: 500;
+	font-size: 17px;
+	margin: auto;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.bo2-container > h2 {
+	margin-bottom: 20px;
+	width: 1075px;
+}
+
+.cards-container {
+	position: relative;
+	top: -320px;
+	left: -10px;
+	display: flex;
+}
+
+.ban2 {
+	position: relative;
+	left: -10px;
+}
+
+.pick1 {
+	position: relative;
+	left: -12px;
+}
+
+.bo2-map-table {
+	height: 325px;
+}
+
+.card-container > p {
+	position: relative;
+	top: -26px;
+	font-weight: 300;
+	font-size: 13px;
+	text-align: center;
+	background: rgba(50, 39, 39, 0.55);
+	border-radius: 3px;
+	height: 26px;
+}

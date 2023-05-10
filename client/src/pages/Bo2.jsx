@@ -14,27 +14,35 @@ export default function Bo2() {
     const params = useParams();
     const roomid = params.id;
 	let body;
-	const [draftStart, setDraftStart] = useState("loading");
+	const [roomState, setRoomState] = useState({});
 
 	useEffect(() => {
 		socket.emit("join room", roomid);
-	}, [])
+		console.log("joining room");
+		console.log(roomState);
+		socket.emit("hi", roomid);
+	}, []);
 
 	useEffect(() => {
-		socket.on("set room state", (roomState) => {
-			setDraftStart(roomState);
+		socket.on("fetch room", (roomInfo) => {
+			console.log("fetching room");
+			setRoomState(roomInfo);
 		})
-	}, [socket])
+		socket.on("hi", (msg) => {
+			console.log(msg);
+		})
+	}, [socket]);
 
-	if (draftStart === "loading") {
-		body = <></>
-	}
-	else if (!draftStart) {
+	
+	if (roomState.draftStart === "false") {
 		body = <Linkshare />;
-	} else {
+	} else if (roomState.draftStart === "true"){
 		body = (
 			<>
-			
+				<div className="bo2-container">
+					<h2>Map Veto</h2>
+					<Bo2Picks team="team b"/>
+				</div>
 			</>
 		);
 	}

@@ -1,27 +1,20 @@
 const express = require('express');
 const app = express();
 const server = require('http').createServer(app);
-const io = require('socket.io')(server, { cors: { origin: "*", methods: ["GET", "POST"] } });
-
-const compmaps = ["ascent", "bind", "fracture", "haven", "lotus", "pearl", "split"]
+const io = require('socket.io')(server, { cors: { origin: "*" } });
 
 //mongoose
 const mongoose = require("mongoose");
 const uri = "mongodb+srv://user:123@valodraft.cccr4is.mongodb.net/ValodraftDB?retryWrites=true&w=majority";
 const roomSchema = new mongoose.Schema({
     roomid: String,
-    team1: String,
-    team2: String,
+    teamA: String,
+    teamB: String,
     mapsRemaining: [String],
-    map1: String,
-    map2: String,
-    map3: String,
-    map1Team1: String,
-    map2Team1: String,
-    map3Team1: String,
+    maps: [String],
+    mapsTeamA: [String],
     mapsBanned: [String],
-    bo: Number,
-    draftStart: Boolean
+    draftStart: String
 })
 
 const VetoRoom = mongoose.model('VetoRoom', roomSchema);
@@ -54,9 +47,9 @@ async function checkRoomExists(room) {
     }
 }
 
-const newRoom = async (roomid, socketid, bo) => {
+const newRoom = async (roomid, socketid) => {
     try {
-        const newRoom = new VetoRoom({ roomid: roomid, team1: socketid, team2: "", mapsRemaining: compmaps, map1: "", map2: "", map3: "", map1Team1: "", map2Team1: "", map3Team1: "", mapsBanned: "", bo: bo, drafStart: false });
+        const newRoom = new VetoRoom({ roomid: roomid, teamA: socketid, teamB: "", mapsRemaining: [], maps: [], mapsTeamA: [], mapsBanned: [], drafStart: "false" });
         await newRoom.save();
         console.log("new room with id: " + roomid);
     } catch (err) {
@@ -68,27 +61,26 @@ const newRoom = async (roomid, socketid, bo) => {
 io.on("connection", (socket) => {
     console.log("user connected: " + socket.id);
 
-    socket.on("join room", async (roomInfo) => {
-        console.log(socket.id + " joined room " + roomid);
+    socket.on("join room", async (roomid) => {
+
+        socket.join(roomid);
 
         if (await checkRoomExists(roomid)) {
-            socket.join(roomid);
-
-            const doc = await VetoRoom.findOne({ roomid: roomInfo.roomid });
-            console.log("doc: " + doc);
-            if (doc.team2 === '') {
-                doc.team2 = socket.id;
-                doc.draftStart = true;
-                await doc.save();
-                socket.to(roomInfo.roomid).emit("set room state", true);
-            } 
-            console.log("room exists joining room: " + roomInfo.roomid)
+            const room = await VetoRoom.findOne({ roomid: roomid});
+            if (room.teamB === '') {
+                room.teamB = socket.id;
+                room.draftStart = "true";
+                await room.save();
+                socket.to(roomid).emit("fetch room", room);
+            }
         } else {
-            console.log("room doesn't exist, creating new room in mongodb");
-            await newRoom(roomInfo.roomid, socket.id, roomInfo.bo);
-            socket.join(roomInfo.roomid);
-            socket.to(roomInfo.roomid).emit("set room state", false );
+            newRoom(roomid, socket.id)
+            const doc = await VetoRoom.findOne({ roomid: roomid });
+            socket.to(roomid).emit("fetch room", doc);
         }
     });
 
+    socket.on("hi", (roomid) => {
+        socket.to(roomid).emit("hi", "hello");
+    }) 
 })
