@@ -47,7 +47,7 @@ export default function MapPickCard(props) {
 	return (
 		<div className="card-container">
 			<img src={card} />
-            <p>Team {props.defender.toUpperCase()} Picks Defender</p>
+            {props.map != "" && <p>Team {props.defender.toUpperCase()} Picks Defender</p>}
 		</div>
 	);
 }

@@ -80,16 +80,16 @@ export default function Bo2Picks(props) {
 					</svg>
 					<div className="cards-container">
 						<div className="ban1 card">
-							<MapBanCard map="ascent" />
+							<MapBanCard map={props.ban1} />
 						</div>
 						<div className="ban2 card">
-							<MapBanCard map="breeze" />
+							<MapBanCard map={props.ban2} />
 						</div>
 						<div className="pick1 card">
-							<MapPickCard map="split" defender="a" />
+							<MapPickCard map={props.map1} defender={props.defender1} />
 						</div>
 						<div className="pick2 card">
-							<MapPickCard map="lotus" defender="b" />
+							<MapPickCard map={props.map2} defender={props.defender2} />
 						</div>
 					</div>
 				</div>
