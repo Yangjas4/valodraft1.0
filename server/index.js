@@ -45,10 +45,22 @@ io.on("connection", (socket) => {
 
     socket.on("get room", async (roomid) => {
         console.log("requesting room");
-        if (checkRoomExists(roomid))
-        const room = await findOrCreateRoom(roomid, socket.id);
+        let room;
+        if (await checkRoomExists(roomid)) {
+
+            room = await VetoRoom.findOne({ roomid: roomid });
+            console.log("doc: " + room);
+            if (room.teamB === '') {
+                room.teamB = socket.id;
+                room.draftStart = true;
+                await room.save();
+            }
+            console.log("room exists joining room: " + roomid)
+        } else {
+            console.log("room doesn't exist, creating new room in mongodb");
+            room = await newRoom(roomid, socket.id);
+        }
         socket.join(roomid);
-        console.log(room);
         io.to(roomid).emit("load room", room);
 
         // socket.on()
@@ -66,11 +78,12 @@ async function checkRoomExists(room) {
     }
 }
 
-const newRoom = async (roomid, socketid, bo) => {
+const newRoom = async (roomid, socketid) => {
     try {
         const newRoom = new VetoRoom({ roomid: roomid, teamA: socketid, teamB: "", mapsRemaining: [], maps: [], mapsTeamA: [], mapsBanned: [], drafStart: false });
         await newRoom.save();
         console.log("new room with id: " + roomid);
+        return newRoom;
     } catch (err) {
         console.log(err);
     }

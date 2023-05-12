@@ -12,7 +12,7 @@ export default function Bo2() {
 
     const params = useParams();
     const roomid = params.id;
-	let body;
+	const [body, setBody] = useState();
 	let socket;
 	const [roomState, setRoomState] = useState();
 	let userid;
@@ -33,7 +33,7 @@ export default function Bo2() {
 
 		console.log("socket defined");
 		userid = socket.id;
-		socket.once("load room", room => {
+		socket.on("load room", room => {
 			setRoomState(room);
 			console.log(roomState);
 		})
@@ -45,17 +45,17 @@ export default function Bo2() {
 		
 		if (roomState === undefined) return;
 		console.log(roomState);
-		if (roomState.draftStart === "false") {
-			body = <Linkshare />;
-		} else if (roomState.draftStart === "true"){
-			body = (
+		if (!roomState.draftStart) {
+			setBody(<Linkshare />)  
+		} else if (roomState.draftStart){
+			setBody((
 				<>
 					<div className="bo2-container">
 						<h2>Map Veto</h2>
 						<Bo2Picks team="team b"/>
 					</div>
 				</>
-			);
+			)) 
 		}
 	}, [roomState]);
 	
