@@ -13,29 +13,28 @@ export default function Bo2() {
     const params = useParams();
     const roomid = params.id;
 	let body;
-	const [socket, setSocket] = useState();
+	let socket;
 	const [roomState, setRoomState] = useState();
 	let userid;
 
 	useEffect(() => {
-		const s = io("http://localhost:3001");
-		setSocket(s);
-
+		socket = io("http://localhost:3001");
+		console.log("socket connected")
+		socket.emit("get room", roomid);
 		return () => {
 			s.disconnect();
 		}
 	}, [])
 
 	useEffect(() => {
-		if (socket == undefined || roomState == undefined) return;
+		if (socket == undefined ) return;
 
 		userid = socket.id;
-		console.log("hello");
 		socket.once("load room", room => {
 			setRoomState(room);
+			console.log(roomState);
 		})
 
-		socket.emit("get room", roomid);
 	}, [socket, roomState, roomid]);
 
 	useEffect(() => {

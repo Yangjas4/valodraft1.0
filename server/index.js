@@ -53,9 +53,11 @@ io.on("connection", (socket) => {
     console.log("user connected: " + socket.id);
 
     socket.on("get room", async (roomid) => {
+        console.log("requesting room");
         const room = await findOrCreateRoom(roomid, socket.id);
         socket.join(roomid);
-        socket.emit("load room", room);
+        console.log(room);
+        socket.to(roomid).emit("load room", room);
 
         // socket.on()
     })
