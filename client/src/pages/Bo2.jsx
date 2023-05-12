@@ -24,7 +24,7 @@ export default function Bo2() {
 
 
 		return () => {
-			s.disconnect();
+			socket.disconnect();
 		}
 	}, [])
 
