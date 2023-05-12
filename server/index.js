@@ -7,7 +7,7 @@ const io = require('socket.io')(server, { cors: { origin: "*" } });
 const mongoose = require("mongoose");
 const uri = "mongodb+srv://user:123@valodraft.cccr4is.mongodb.net/ValodraftDB?retryWrites=true&w=majority";
 const roomSchema = new mongoose.Schema({
-    _id: String,
+    id: String,
     teamA: String,
     teamB: String,
     mapsRemaining: [String],
@@ -57,7 +57,7 @@ io.on("connection", (socket) => {
         const room = await findOrCreateRoom(roomid, socket.id);
         socket.join(roomid);
         console.log(room);
-        socket.to(roomid).emit("load room", room);
+        io.to(roomid).emit("load room", room);
 
         // socket.on()
     })
@@ -66,13 +66,18 @@ io.on("connection", (socket) => {
 async function findOrCreateRoom(id, socket) {
     if (id === null) return;
 
-    const room = await VetoRoom.findById(id);
-    if (room) {
-        if (room.teamB = '') {
-            await VetoRoom.findByIdAndUpdate(id, {teamB: socket, draftStart: true});
+    let result = await VetoRoom.find({id: id});
+    console.log(`room: ${room}`);
+    if (result.length > 0) {
+        let room = result[0]
+        if (room.teamB === "") {
+            room = {...room, teamB: socket, draftStart: true};
+            room.save();
             return room;
         }
         return room;
-    };
-    return await VetoRoom.create({ _id: id, teamA: socket, teamB: "", mapsRemaining: [], maps: [], mapsTeamA: [], mapsBanned: [], drafStart: "false" });
+    } else {
+        return await VetoRoom.create({ id: id, teamA: socket, teamB: "", mapsRemaining: [], maps: [], mapsTeamA: [], mapsBanned: [], drafStart: "false" });
+    }
+   
 }

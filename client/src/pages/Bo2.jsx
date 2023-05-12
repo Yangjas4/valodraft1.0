@@ -21,6 +21,8 @@ export default function Bo2() {
 		socket = io("http://localhost:3001");
 		console.log("socket connected")
 		socket.emit("get room", roomid);
+
+
 		return () => {
 			s.disconnect();
 		}
@@ -29,17 +31,20 @@ export default function Bo2() {
 	useEffect(() => {
 		if (socket == undefined ) return;
 
+		console.log("socket defined");
 		userid = socket.id;
 		socket.once("load room", room => {
 			setRoomState(room);
 			console.log(roomState);
 		})
 
-	}, [socket, roomState, roomid]);
+	}, [socket]);
+
 
 	useEffect(() => {
-		if (roomState === undefined || socket === undefined) return;
-
+		
+		if (roomState === undefined) return;
+		console.log(roomState);
 		if (roomState.draftStart === "false") {
 			body = <Linkshare />;
 		} else if (roomState.draftStart === "true"){
@@ -52,7 +57,7 @@ export default function Bo2() {
 				</>
 			);
 		}
-	}, [socket, roomState]);
+	}, [roomState]);
 	
 
 	return (
