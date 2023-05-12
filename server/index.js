@@ -14,7 +14,7 @@ const roomSchema = new mongoose.Schema({
     maps: [String],
     mapsTeamA: [String],
     mapsBanned: [String],
-    draftStart: String
+    draftStart: Boolean
 })
 
 const VetoRoom = mongoose.model('VetoRoom', roomSchema);
@@ -38,15 +38,6 @@ mongoose.connection.once('open', () => {
 })
 
 
-const newRoom = async (roomid, socketid) => {
-    try {
-        const newRoom = new VetoRoom();
-        await newRoom.save();
-        console.log("new room with id: " + roomid);
-    } catch (err) {
-        console.log(err);
-    }
-}
 
 //socket.io
 io.on("connection", (socket) => {
@@ -54,6 +45,7 @@ io.on("connection", (socket) => {
 
     socket.on("get room", async (roomid) => {
         console.log("requesting room");
+        if (checkRoomExists(roomid))
         const room = await findOrCreateRoom(roomid, socket.id);
         socket.join(roomid);
         console.log(room);
@@ -63,21 +55,23 @@ io.on("connection", (socket) => {
     })
 })
 
-async function findOrCreateRoom(id, socket) {
-    if (id === null) return;
 
-    let result = await VetoRoom.find({roomid: id});
-    console.log(`room: ${room}`);
-    if (result.length > 0) {
-        let room = result[0]
-        if (room.teamB === "") {
-            room = {...room, teamB: socket, draftStart: true};
-            room.save();
-            return room;
-        }
-        return room;
-    } else {
-        return await VetoRoom.create({ roomid: id, teamA: socket, teamB: "", mapsRemaining: [], maps: [], mapsTeamA: [], mapsBanned: [], drafStart: "false" });
+
+async function checkRoomExists(room) {
+    try {
+        const match = await VetoRoom.exists({ roomid: room });
+        return match;
+    } catch (err) {
+        console.log(err);
     }
-   
+}
+
+const newRoom = async (roomid, socketid, bo) => {
+    try {
+        const newRoom = new VetoRoom({ roomid: roomid, teamA: socketid, teamB: "", mapsRemaining: [], maps: [], mapsTeamA: [], mapsBanned: [], drafStart: false });
+        await newRoom.save();
+        console.log("new room with id: " + roomid);
+    } catch (err) {
+        console.log(err);
+    }
 }
