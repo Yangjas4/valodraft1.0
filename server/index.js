@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const server = require('http').createServer(app);
 const io = require('socket.io')(server, { cors: { origin: "*" } });
-
+const compMaps = ["bind", "split", ]
 //mongoose
 const mongoose = require("mongoose");
 const uri = "mongodb+srv://user:123@valodraft.cccr4is.mongodb.net/ValodraftDB?retryWrites=true&w=majority";
@@ -64,6 +64,14 @@ io.on("connection", (socket) => {
         io.to(roomid).emit("load room", room);
 
         // socket.on()
+    });
+
+    socket.on("update room", async (roomState) => {
+        console.log("updating room");
+        room = await VetoRoom.findOne({ roomid: roomState.roomid});
+        room = roomState;
+        await room.save();
+        io.to(roomid).emit("load room", room);
     })
 })
 

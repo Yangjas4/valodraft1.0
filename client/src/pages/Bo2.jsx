@@ -73,6 +73,9 @@ export default function Bo2() {
 			)) 
 		}
 
+		if (roomState.mapsBanned.length === 0 ) {
+
+		}
 	}, [roomState, team]);
 	
 
@@ -84,3 +87,5 @@ export default function Bo2() {
 		</>
 	);
 }
+
+
