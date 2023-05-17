@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const server = require('http').createServer(app);
 const io = require('socket.io')(server, { cors: { origin: "*" } });
-const compMaps = ["bind", "split", ]
+const compMaps = ["ascent", "bind", "fracture", "haven", "lotus", "pearl", "split"]
 //mongoose
 const mongoose = require("mongoose");
 const uri = "mongodb+srv://user:123@valodraft.cccr4is.mongodb.net/ValodraftDB?retryWrites=true&w=majority";
@@ -12,7 +12,7 @@ const roomSchema = new mongoose.Schema({
     teamB: String,
     mapsRemaining: [String],
     maps: [String],
-    mapsTeamA: [String],
+    defender: [String],
     mapsBanned: [String],
     draftStart: Boolean
 })
@@ -88,7 +88,7 @@ async function checkRoomExists(room) {
 
 const newRoom = async (roomid, socketid) => {
     try {
-        const newRoom = new VetoRoom({ roomid: roomid, teamA: socketid, teamB: "", mapsRemaining: [], maps: [], mapsTeamA: [], mapsBanned: [], drafStart: false });
+        const newRoom = new VetoRoom({ roomid: roomid, teamA: socketid, teamB: "", mapsRemaining: compMaps, maps: ["", ""], defender: ["", ""], mapsBanned: ["", ""], drafStart: false });
         await newRoom.save();
         console.log("new room with id: " + roomid);
         return newRoom;
