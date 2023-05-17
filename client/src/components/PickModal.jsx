@@ -5,7 +5,7 @@ export default function PickModal(props) {
 	console.log(props.mapsRemaining);
 	const maps = props.mapsRemaining;
 
-	const cards = maps.map((m) => <ModalCard map={m} key={m} />);
+	const cards = maps.map((m) => <ModalCard map={m} key={m} handleClick={props.handleClick}/>);
 	console.log(cards);
 	return (
 		<motion.div

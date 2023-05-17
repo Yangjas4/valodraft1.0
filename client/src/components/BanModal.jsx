@@ -4,7 +4,7 @@ import ModalCard from "./ModalCard";
 export default function BanModal(props) {
 	const maps = props.mapsRemaining;
 
-	const cards = maps.map((m) => <ModalCard map={m} key={m} />);
+	const cards = maps.map((m) => <ModalCard map={m} key={m} handleClick={props.handleClick}/>);
 
 	return (
 		<motion.div

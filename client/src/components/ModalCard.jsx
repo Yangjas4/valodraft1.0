@@ -46,7 +46,7 @@ export default function ModalCard(props) {
 	}
     return (
         <>
-        <motion.img src={card} className="modal-card" whileHover={{scale: 1.03}}/>
+        <motion.img src={card} className="modal-card" whileHover={{scale: 1.03}} onClick={() => props.handleClick(props.map)}/>
         </>
     )
 }

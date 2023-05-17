@@ -22,11 +22,13 @@ export default function Bo2() {
 	const [banning, setBanning] = useState(false);
 	const [sideChoice, setSideChoice] = useState(false);
 
-	function handlePick() {
+	function handlePick(map) {
+		console.log(map);
 		setPicking(false);
 	}
 
-	function handleBan() {
+	function handleBan(map) {
+		console.log(map);
 		setBanning(false);
 	}
 
@@ -99,7 +101,7 @@ export default function Bo2() {
 							<AnimatePresence>
 								<PickModal
 									mapsRemaining={roomState.mapsRemaining}
-									handleSelect={handlePick}
+									handleClick={handlePick}
 								/>
 							</AnimatePresence>
 						)}
@@ -107,7 +109,7 @@ export default function Bo2() {
 							<AnimatePresence>
 								<BanModal
 									mapsRemaining={roomState.mapsRemaining}
-									handleSelect={handleBan}
+									handleClick={handleBan}
 								/>
 							</AnimatePresence>
 						)}
@@ -115,7 +117,7 @@ export default function Bo2() {
 							<AnimatePresence>
 								<SidesModal
 									currentMap={unsidedMap}
-									handleSelect={handleSideChoice}
+									handleClick={handleSideChoice}
 								/>
 							</AnimatePresence>
 						)}
@@ -166,7 +168,7 @@ export default function Bo2() {
 		) {
 			setSideChoice(true);
 		}
-	}, [roomState, team]);
+	}, [roomState, team, picking, banning, sideChoice]);
 
 	return (
 		<>
