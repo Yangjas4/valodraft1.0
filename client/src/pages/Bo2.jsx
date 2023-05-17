@@ -8,6 +8,7 @@ import Bo2Picks from "../components/Bo2Picks";
 import BanModal from "../components/BanModal";
 import PickModal from "../components/PickModal";
 import SidesModal from "../components/SidesModal";
+import { AnimatePresence } from "framer-motion";
 
 export default function Bo2() {
 	const params = useParams();
@@ -17,7 +18,7 @@ export default function Bo2() {
 	const [roomState, setRoomState] = useState();
 	const [socketId, setSocketId] = useState();
 	const [team, setTeam] = useState("");
-	const [picking, setPicking] = useState(true);
+	const [picking, setPicking] = useState(false);
 	const [banning, setBanning] = useState(false);
 	const [sideChoice, setSideChoice] = useState(false);
 
@@ -60,6 +61,14 @@ export default function Bo2() {
 	useEffect(() => {
 		if (roomState === undefined) return;
 
+		let unsidedMap = "ascent";
+
+		if (roomState.maps[0] !== "") {
+			unsidedMap = roomState.maps[0];
+		} else if (roomState.maps[1] !== "") {
+			unsidedMap = roomState.maps[1];
+		}
+
 		if (!roomState.draftStart) {
 			setBody(<Linkshare />);
 		} else if (roomState.draftStart) {
@@ -87,19 +96,28 @@ export default function Bo2() {
 							defender2={roomState.defender[1]}
 						/>
 						{picking && (
-							<PickModal
-								mapsRemaining={roomState.mapsRemaining}
-								handleSelect={handlePick}
-							/>
+							<AnimatePresence>
+								<PickModal
+									mapsRemaining={roomState.mapsRemaining}
+									handleSelect={handlePick}
+								/>
+							</AnimatePresence>
 						)}
 						{banning && (
-							<BanModal
-								mapsRemaining={roomState.mapsRemaining}
-								handleSelect={handleBan}
-							/>
+							<AnimatePresence>
+								<BanModal
+									mapsRemaining={roomState.mapsRemaining}
+									handleSelect={handleBan}
+								/>
+							</AnimatePresence>
 						)}
 						{sideChoice && (
-							<SidesModal handleSelect={handleSideChoice} />
+							<AnimatePresence>
+								<SidesModal
+									currentMap={unsidedMap}
+									handleSelect={handleSideChoice}
+								/>
+							</AnimatePresence>
 						)}
 					</div>
 				</>
@@ -107,23 +125,41 @@ export default function Bo2() {
 		}
 
 		if (roomState.mapsBanned[0] === "" && roomState.teamA === socketId) {
+			console.log(setRoomState.teamA === socketId);
 			setBanning(true);
 		} else if (
+			roomState.mapsBanned[0] !== "" &&
 			roomState.mapsBanned[1] === "" &&
 			roomState.teamB === socketId
 		) {
 			setBanning(true);
-		} else if (roomState.maps[0] === "" && roomState.teamA === socketId) {
+		} else if (
+			roomState.mapsBanned[0] !== "" &&
+			roomState.mapsBanned[1] !== "" &&
+			roomState.maps[0] === "" &&
+			roomState.teamA === socketId
+		) {
 			setPicking(true);
 		} else if (
+			roomState.mapsBanned[0] !== "" &&
+			roomState.mapsBanned[1] !== "" &&
 			roomState.maps[0] !== "" &&
 			roomState.defender[0] === "" &&
 			roomState.teamB === socketId
 		) {
 			setSideChoice(true);
-		} else if (roomState.maps[1] === "" && roomState.teamB === socketId) {
+		} else if (
+			roomState.mapsBanned[0] !== "" &&
+			roomState.mapsBanned[1] !== "" &&
+			roomState.maps[0] !== "" &&
+			roomState.maps[1] === "" &&
+			roomState.teamB === socketId
+		) {
 			setPicking(true);
 		} else if (
+			roomState.mapsBanned[0] !== "" &&
+			roomState.mapsBanned[1] !== "" &&
+			roomState.maps[0] !== "" &&
 			roomState.maps[1] !== "" &&
 			roomState.defender[1] === "" &&
 			roomState.teamA === socketId

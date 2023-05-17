@@ -7,10 +7,10 @@ import icebox from "../assets/Icebox.svg";
 import lotus from "../assets/Lotus.svg";
 import pearl from "../assets/Pearl.svg";
 import split from "../assets/Split.svg";
+import { motion } from "framer-motion";
 
-
-export default function MapPickCard(props) {
-	let card;
+export default function ModalCard(props) {
+    let card;
 
 	switch (props.map) {
 		case "ascent":
@@ -44,11 +44,9 @@ export default function MapPickCard(props) {
             card = '';
             break;
 	}
-
-	return (
-		<div className="card-container">
-			<img src={card} />
-            {props.map != "" && <p>Team {props.defender.toUpperCase()} Picks Defender</p>}
-		</div>
-	);
+    return (
+        <>
+        <motion.img src={card} className="modal-card" whileHover={{scale: 1.03}}/>
+        </>
+    )
 }
