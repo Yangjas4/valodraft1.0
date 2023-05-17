@@ -17,7 +17,7 @@ export default function Bo2() {
 	const [roomState, setRoomState] = useState();
 	const [socketId, setSocketId] = useState();
 	const [team, setTeam] = useState("");
-	const [picking, setPicking] = useState(false);
+	const [picking, setPicking] = useState(true);
 	const [banning, setBanning] = useState(false);
 	const [sideChoice, setSideChoice] = useState(false);
 
@@ -79,12 +79,12 @@ export default function Bo2() {
 						<h2>Map Veto</h2>
 						<Bo2Picks
 							team={team}
-							map1={roomState.maps[1]}
-							map2={roomState.maps[2]}
-							ban1={roomState.mapsBanned[1]}
-							ban2={roomState.mapsBanned[2]}
-							defender1={roomState.defender[1]}
-							defender2={roomState.defender[2]}
+							map1={roomState.maps[0]}
+							map2={roomState.maps[1]}
+							ban1={roomState.mapsBanned[0]}
+							ban2={roomState.mapsBanned[1]}
+							defender1={roomState.defender[0]}
+							defender2={roomState.defender[1]}
 						/>
 						{picking && (
 							<PickModal
