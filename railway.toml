@@ -1,0 +1,7 @@
+[build]
+watchPatterns = ["server/**"]
+
+[deploy]
+startCommand = "cd server && node index.js"
+healthcheckPath = "/"
+restartPolicyType = "on_failure"
