@@ -15,7 +15,8 @@ const roomSchema = new mongoose.Schema({
     defender: [String],
     mapsBanned: [String],
     draftStart: Boolean,
-    type: { type: String, default: "bo2" }
+    type: { type: String, default: "bo2" },
+    createdAt: { type: Date, default: Date.now, expires: 60 * 60 * 24 * 30 }
 })
 
 const VetoRoom = mongoose.model('VetoRoom', roomSchema);
