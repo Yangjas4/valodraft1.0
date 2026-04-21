@@ -7,9 +7,12 @@ import icebox from "../assets/Icebox.svg";
 import lotus from "../assets/Lotus.svg";
 import pearl from "../assets/Pearl.svg";
 import split from "../assets/Split.svg";
+import abyss from "../assets/Abyss.svg";
+import sunset from "../assets/Sunset.svg";
+import corrode from "../assets/Corrode.svg";
 import { motion, AnimatePresence } from "framer-motion";
 
-const mapImages = { ascent, bind, breeze, fracture, haven, icebox, lotus, pearl, split };
+const mapImages = { bind, breeze, fracture, haven, lotus, pearl, split, abyss, sunset, corrode, ascent };
 
 export default function MapPickCard(props) {
 	const card = mapImages[props.map] ?? "";

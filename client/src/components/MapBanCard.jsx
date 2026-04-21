@@ -7,11 +7,15 @@ import iceboxBan from "../assets/IceboxBan.svg";
 import lotusBan from "../assets/LotusBan.svg";
 import pearlBan from "../assets/PearlBan.svg";
 import splitBan from "../assets/SplitBan.svg";
+import abyssBan from "../assets/AbyssBan.svg";
+import sunsetBan from "../assets/SunsetBan.svg";
+import corrodeBan from "../assets/CorrodeBan.svg";
 import { motion, AnimatePresence } from "framer-motion";
 
 const banMaps = {
-	ascent: ascentBan, bind: bindBan, breeze: breezeBan, fracture: fractureBan,
-	haven: havenBan, icebox: iceboxBan, lotus: lotusBan, pearl: pearlBan, split: splitBan,
+	bind: bindBan, breeze: breezeBan, fracture: fractureBan,
+	haven: havenBan, lotus: lotusBan, pearl: pearlBan, split: splitBan,
+	abyss: abyssBan, sunset: sunsetBan, corrode: corrodeBan, ascent: ascentBan,
 };
 
 export default function MapBanCard(props) {

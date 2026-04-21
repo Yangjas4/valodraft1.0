@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const server = require('http').createServer(app);
 const io = require('socket.io')(server, { cors: { origin: "*" } });
-const compMaps = ["ascent", "bind", "fracture", "haven", "lotus", "pearl", "split"]
+const compMaps = ["bind", "breeze", "fracture", "haven", "lotus", "pearl", "split"]
 //mongoose
 const mongoose = require("mongoose");
 const uri = "mongodb+srv://yangjas4:Clipart7@valodraft.rkudkoy.mongodb.net/ValodraftDB?retryWrites=true&w=majority&appName=Valodraft";
@@ -134,7 +134,7 @@ async function checkRoomExists(room) {
 const newRoom = async (roomid, socketid, type = "bo2") => {
     try {
         const maps = type === "bo3" ? ["", "", ""] : ["", ""];
-        const defender = ["", ""];
+        const defender = type === "bo3" ? ["", "", ""] : ["", ""];
         const mapsBanned = type === "bo3" ? ["", "", "", ""] : ["", ""];
         const room = new VetoRoom({
             roomid, teamA: socketid, teamB: "",

@@ -29,6 +29,7 @@ body {
 body {
 	line-height: 1.5;
 	-webkit-font-smoothing: antialiased;
+	overflow-x: hidden;
 }
 /*
     6. Improve media defaults
@@ -73,14 +74,13 @@ nav {
 	width: 100%;
 	height: 190px;
 	padding-left: 120px;
-	padding-right: 140px;
+	padding-right: 90px;
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
 }
 
 #hamburger {
-	padding-top: 10px;
 	cursor: pointer;
 }
 
@@ -114,18 +114,9 @@ nav {
 	font-weight: 700;
 }
 
-#x-button {
-	font-size: 50px;
-	font-weight: 300;
-	background-color: #f25454;
-	margin-left: 160px;
-	color: white;
-	cursor: pointer;
-	user-select: none;
-}
 
-#x-button:hover {
-	font-weight: 800;
+#x-button {
+	cursor: pointer;
 }
 
 footer {
@@ -411,10 +402,11 @@ path {
 
 .card-container > p {
 	position: relative;
-	top: -26px;
+	top: -22px;
 	font-weight: 300;
 	font-size: 13px;
 	text-align: center;
+	text-shadow: 0 1px 4px rgba(0, 0, 0, 0.9);
 	background: rgba(50, 39, 39, 0.55);
 	border-radius: 3px;
 	height: 26px;
@@ -556,6 +548,7 @@ path {
 	display: flex;
 	width: 1049px;
 	margin-top: 25px;
+	padding: 0 0 0 7px;
 }
 
 .bo3-pick-titles > h4 {
@@ -572,34 +565,45 @@ path {
 
 .cards-container-bo3 {
 	position: relative;
-	top: -215px;
+	top: -223px;
 	display: flex;
 	width: 1049px;
 }
 
 .bo3-col {
 	flex: 1;
+	display: flex;
+	justify-content: center;
 	overflow: hidden;
-	padding: 5px 3px 0;
 }
 
 .bo3-card-wrap {
-	width: 100%;
+	width: 136px;
 }
 
 .bo3-card-wrap .card-container {
-	width: 100%;
+	width: 136px;
+}
+
+.bo3-card-wrap .card-container > div {
+	border-radius: 6px;
+	overflow: hidden;
 }
 
 .bo3-card-wrap img {
-	width: 100%;
-	height: auto;
+	width: 136px;
+	height: 218px;
+	object-fit: cover;
 	display: block;
+	border-radius: 6px;
 }
 
 .bo3-card-wrap .card-container > p {
 	font-size: 8px;
 	height: 20px;
 	top: -20px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 }
 

@@ -20,6 +20,7 @@ export default function Bo3() {
 	const [picking, setPicking] = useState(false);
 	const [banning, setBanning] = useState(false);
 	const [sideChoice, setSideChoice] = useState(false);
+	const [deciderVisible, setDeciderVisible] = useState(false);
 
 	function handlePick(map) {
 		socketRef.current.emit("pick map", { roomid, map });
@@ -88,12 +89,21 @@ export default function Bo3() {
 		// Step 8: Team B bans again (decider auto-fills on server after this)
 		} else if (mapsBanned[2] !== "" && mapsBanned[3] === "" && teamB === socketId) {
 			next = () => setBanning(true);
+		// Step 9: Team A picks side for decider
+		} else if (mapsBanned[3] !== "" && maps[2] !== "" && defender[2] === "" && teamA === socketId) {
+			next = () => setSideChoice(true);
 		}
 
 		if (!next) return;
 		const timer = setTimeout(next, 1000);
 		return () => clearTimeout(timer);
 	}, [roomState, socketId]);
+
+	useEffect(() => {
+		if (!roomState?.maps[2]) return;
+		const timer = setTimeout(() => setDeciderVisible(true), 800);
+		return () => clearTimeout(timer);
+	}, [roomState?.maps[2]]);
 
 	const team =
 		socketId === roomState?.teamA
@@ -105,13 +115,29 @@ export default function Bo3() {
 	const unsidedMap =
 		roomState?.maps[0] !== "" && roomState?.defender[0] === "" ? roomState.maps[0] :
 		roomState?.maps[1] !== "" && roomState?.defender[1] === "" ? roomState.maps[1] :
+		roomState?.maps[2] !== "" && roomState?.defender[2] === "" ? roomState.maps[2] :
 		"ascent";
 
 	const vetoComplete =
 		roomState?.mapsBanned[0] !== "" && roomState?.mapsBanned[1] !== "" &&
 		roomState?.mapsBanned[2] !== "" && roomState?.mapsBanned[3] !== "" &&
 		roomState?.maps[0] !== "" && roomState?.maps[1] !== "" && roomState?.maps[2] !== "" &&
-		roomState?.defender[0] !== "" && roomState?.defender[1] !== "";
+		roomState?.defender[0] !== "" && roomState?.defender[1] !== "" && roomState?.defender[2] !== "";
+
+	const currentTurn = (() => {
+		if (!roomState || vetoComplete) return null;
+		const { mapsBanned, maps, defender } = roomState;
+		if (mapsBanned[0] === "") return { team: "TEAM A", action: "BANNING" };
+		if (mapsBanned[1] === "") return { team: "TEAM B", action: "BANNING" };
+		if (maps[0] === "") return { team: "TEAM A", action: "PICKING" };
+		if (defender[0] === "") return { team: "TEAM B", action: "PICKING SIDES" };
+		if (maps[1] === "") return { team: "TEAM B", action: "PICKING" };
+		if (defender[1] === "") return { team: "TEAM A", action: "PICKING SIDES" };
+		if (mapsBanned[2] === "") return { team: "TEAM A", action: "BANNING" };
+		if (mapsBanned[3] === "") return { team: "TEAM B", action: "BANNING" };
+		if (maps[2] !== "" && defender[2] === "") return { team: "TEAM A", action: "PICKING SIDES" };
+		return null;
+	})();
 
 	return (
 		<>
@@ -129,9 +155,10 @@ export default function Bo3() {
 						map2={roomState.maps[1]}
 						ban3={roomState.mapsBanned[2]}
 						ban4={roomState.mapsBanned[3]}
-						decider={roomState.maps[2]}
+						decider={deciderVisible ? roomState.maps[2] : ""}
 						defender1={roomState.defender[0]}
 						defender2={roomState.defender[1]}
+						deciderDefender={roomState.defender[2]}
 					/>
 					<AnimatePresence mode="wait">
 						{vetoComplete ? (
@@ -170,6 +197,31 @@ export default function Bo3() {
 								>
 									MAP VETO COMPLETE
 								</motion.span>
+							</motion.div>
+						) : team === "spectating" && currentTurn ? (
+							<motion.div
+								key="spectating"
+								initial={{ opacity: 0, y: 6 }}
+								animate={{ opacity: 1, y: 0 }}
+								exit={{ opacity: 0, y: 6 }}
+								transition={{ duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
+								style={{
+									color: "#a5a5a5",
+									fontSize: "13px",
+									fontWeight: 400,
+									letterSpacing: "0.12em",
+									marginTop: "18px",
+									display: "flex",
+									alignItems: "center",
+									gap: "8px",
+								}}
+							>
+								<motion.span
+									animate={{ opacity: [1, 0.3, 1] }}
+									transition={{ duration: 1.4, repeat: Infinity, ease: "easeInOut" }}
+									style={{ display: "inline-block", width: 6, height: 6, borderRadius: "50%", background: "#a5a5a5" }}
+								/>
+								{currentTurn.team} IS {currentTurn.action}
 							</motion.div>
 						) : !picking && !banning && !sideChoice && team !== "spectating" ? (
 							<motion.div

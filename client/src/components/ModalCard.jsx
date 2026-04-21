@@ -7,6 +7,9 @@ import icebox from "../assets/Icebox.svg";
 import lotus from "../assets/Lotus.svg";
 import pearl from "../assets/Pearl.svg";
 import split from "../assets/Split.svg";
+import abyss from "../assets/Abyss.svg";
+import sunset from "../assets/Sunset.svg";
+import corrode from "../assets/Corrode.svg";
 import { motion } from "framer-motion";
 
 export default function ModalCard(props) {
@@ -40,6 +43,15 @@ export default function ModalCard(props) {
 		case "split":
 			card = split;
 			break;
+		case "abyss":
+			card = abyss;
+			break;
+		case "sunset":
+			card = sunset;
+			break;
+		case "corrode":
+			card = corrode;
+			break;		
         default:
             card = '';
             break;

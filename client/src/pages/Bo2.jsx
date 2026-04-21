@@ -126,6 +126,18 @@ export default function Bo2() {
 		roomState?.maps[0] !== "" && roomState?.maps[1] !== "" &&
 		roomState?.defender[0] !== "" && roomState?.defender[1] !== "";
 
+	const currentTurn = (() => {
+		if (!roomState || vetoComplete) return null;
+		const { mapsBanned, maps, defender } = roomState;
+		if (mapsBanned[0] === "") return { team: "TEAM A", action: "BANNING" };
+		if (mapsBanned[1] === "") return { team: "TEAM B", action: "BANNING" };
+		if (maps[0] === "") return { team: "TEAM A", action: "PICKING" };
+		if (defender[0] === "") return { team: "TEAM B", action: "PICKING SIDES" };
+		if (maps[1] === "") return { team: "TEAM B", action: "PICKING" };
+		if (defender[1] === "") return { team: "TEAM A", action: "PICKING SIDES" };
+		return null;
+	})();
+
 	return (
 		<>
 			<Navbar />
@@ -180,6 +192,31 @@ export default function Bo2() {
 								>
 									MAP VETO COMPLETE
 								</motion.span>
+							</motion.div>
+						) : team === "spectating" && currentTurn ? (
+							<motion.div
+								key="spectating"
+								initial={{ opacity: 0, y: 6 }}
+								animate={{ opacity: 1, y: 0 }}
+								exit={{ opacity: 0, y: 6 }}
+								transition={{ duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
+								style={{
+									color: "#a5a5a5",
+									fontSize: "13px",
+									fontWeight: 400,
+									letterSpacing: "0.12em",
+									marginTop: "18px",
+									display: "flex",
+									alignItems: "center",
+									gap: "8px",
+								}}
+							>
+								<motion.span
+									animate={{ opacity: [1, 0.3, 1] }}
+									transition={{ duration: 1.4, repeat: Infinity, ease: "easeInOut" }}
+									style={{ display: "inline-block", width: 6, height: 6, borderRadius: "50%", background: "#a5a5a5" }}
+								/>
+								{currentTurn.team} IS {currentTurn.action}
 							</motion.div>
 						) : !picking && !banning && !sideChoice && team !== "spectating" ? (
 							<motion.div

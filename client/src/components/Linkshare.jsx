@@ -7,6 +7,8 @@ import { useNavigate } from "react-router-dom";
 export default function Linkshare() {
 	const navigate = useNavigate();
 	const [copied, setCopied] = useState(false);
+	const [cancelHovered, setCancelHovered] = useState(false);
+	const [inputFocused, setInputFocused] = useState(false);
 
 	function handleCancel() {
 		navigate("/");
@@ -36,8 +38,12 @@ export default function Linkshare() {
 							<input
 								type="text"
 								value={window.location.href}
-								readOnly
+								onChange={() => {}}
 								id="linkinput"
+								onClick={() => setInputFocused(true)}
+								onFocus={() => setInputFocused(true)}
+								onBlur={() => setInputFocused(false)}
+								style={{ caretColor: inputFocused ? "white" : "transparent", cursor: "text" }}
 							/>
 							{copied ? (
 								<div
@@ -50,17 +56,27 @@ export default function Linkshare() {
 										alignItems: "center",
 										justifyContent: "center",
 										flexShrink: 0,
-										fontSize: "18px",
-										color: "white",
 										cursor: "default",
 										userSelect: "none",
 									}}
 								>
-									✓
+									<svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+										<motion.path
+											d="M3 8.5L6.5 12L13 5"
+											stroke="white"
+											strokeWidth="2"
+											strokeLinecap="round"
+											strokeLinejoin="round"
+											initial={{ pathLength: 0 }}
+											animate={{ pathLength: 1 }}
+											transition={{ duration: 0.3, ease: "easeOut" }}
+										/>
+									</svg>
 								</div>
 							) : (
 								<motion.div
 									onClick={handleCopy}
+									whileHover={{ scale: 1.06 }}
 									whileTap={{ scale: 1.05 }}
 									style={{
 										height: "36px",
@@ -106,12 +122,28 @@ export default function Linkshare() {
 					</div>
 
 					<motion.div
-						whileHover={{ scale: 1.05 }}
 						className="cancel-button"
 						onClick={handleCancel}
+						onHoverStart={() => setCancelHovered(true)}
+						onHoverEnd={() => setCancelHovered(false)}
+						whileHover={{ scale: 1.02 }}
+						style={{ overflow: "hidden", position: "relative" }}
 					>
 						<img src={cancel} alt="x" />
 						<p>CANCEL</p>
+						<motion.div
+							initial={{ x: "-150%" }}
+							animate={{ x: cancelHovered ? "250%" : "-150%" }}
+							transition={cancelHovered ? { duration: 0.45, ease: [0.25, 0.46, 0.45, 0.94] } : { duration: 0 }}
+							style={{
+								position: "absolute",
+								top: 0, left: 0,
+								width: "45%",
+								height: "100%",
+								background: "linear-gradient(105deg, transparent 30%, rgba(255,255,255,0.35) 50%, transparent 70%)",
+								pointerEvents: "none",
+							}}
+						/>
 					</motion.div>
 				</div>
 			</div>
