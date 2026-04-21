@@ -1,24 +1,47 @@
-import ModalCard from "./ModalCard";
 import { motion } from "framer-motion";
+import ModalCard from "./ModalCard";
+
+const container = {
+	hidden: { opacity: 0, y: 28, scale: 0.97 },
+	visible: {
+		opacity: 1, y: 0, scale: 1,
+		transition: {
+			duration: 0.3,
+			ease: [0.25, 0.46, 0.45, 0.94],
+			staggerChildren: 0.05,
+		},
+	},
+	exit: {
+		opacity: 0, y: 14,
+		transition: { duration: 0.18, ease: [0.55, 0, 1, 0.45] },
+	},
+};
+
+const item = {
+	hidden: { opacity: 0, y: 14 },
+	visible: { opacity: 1, y: 0, transition: { duration: 0.25, ease: [0.25, 0.46, 0.45, 0.94] } },
+};
 
 export default function PickModal(props) {
-	console.log(props.mapsRemaining);
-	const maps = props.mapsRemaining;
+	const cards = props.mapsRemaining.map((m) => (
+		<motion.div key={m} variants={item}>
+			<ModalCard map={m} onSelect={props.handleSelect} />
+		</motion.div>
+	));
 
-	const cards = maps.map((m) => <ModalCard map={m} key={m} />);
-	console.log(cards);
 	return (
 		<motion.div
 			className="pick-modal-container"
-			initial={{ scale: 0 }}
-			animate={{ scale: 1 }}
-			exit={{ scale: 0 }}
+			variants={container}
+			initial="hidden"
+			animate="visible"
+			exit="exit"
 		>
-			<div className="pick-modal-text">
+			<motion.div className="pick-modal-text" variants={item}>
 				<h1>
 					YOUR TURN TO <span id="light">PICK</span>
 				</h1>
-			</div>
+			</motion.div>
 			<div className="pick-modal-maps">{cards}</div>
 		</motion.div>
 	);

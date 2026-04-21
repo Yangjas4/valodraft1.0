@@ -1,52 +1,48 @@
-import ascent from "../assets/AscentBan.svg";
-import bind from "../assets/BindBan.svg";
-import breeze from "../assets/BreezeBan.svg";
-import fracture from "../assets/FractureBan.svg";
-import haven from "../assets/HavenBan.svg";
-import icebox from "../assets/IceboxBan.svg";
-import lotus from "../assets/LotusBan.svg";
-import pearl from "../assets/PearlBan.svg";
-import split from "../assets/SplitBan.svg";
+import ascentBan from "../assets/AscentBan.svg";
+import bindBan from "../assets/BindBan.svg";
+import breezeBan from "../assets/BreezeBan.svg";
+import fractureBan from "../assets/FractureBan.svg";
+import havenBan from "../assets/HavenBan.svg";
+import iceboxBan from "../assets/IceboxBan.svg";
+import lotusBan from "../assets/LotusBan.svg";
+import pearlBan from "../assets/PearlBan.svg";
+import splitBan from "../assets/SplitBan.svg";
+import { motion, AnimatePresence } from "framer-motion";
+
+const banMaps = {
+	ascent: ascentBan, bind: bindBan, breeze: breezeBan, fracture: fractureBan,
+	haven: havenBan, icebox: iceboxBan, lotus: lotusBan, pearl: pearlBan, split: splitBan,
+};
 
 export default function MapBanCard(props) {
-	let card;
-
-	switch (props.map) {
-		case "ascent":
-			card = ascent;
-			break;
-		case "bind":
-			card = bind;
-			break;
-		case "breeze":
-			card = breeze;
-			break;
-		case "fracture":
-			card = fracture;
-			break;
-		case "haven":
-			card = haven;
-			break;
-		case "icebox":
-			card = icebox;
-			break;
-		case "lotus":
-			card = lotus;
-			break;
-		case "pearl":
-			card = pearl;
-			break;
-		case "split":
-			card = split;
-			break;
-		default:
-			card = "";
-			break;
-	}
-
 	return (
 		<div className="card-container">
-			<img src={card} />
+			<AnimatePresence>
+				{props.map !== "" && (
+					<motion.div
+						key={props.map}
+						style={{ position: "relative" }}
+						initial={{ opacity: 0, scale: 1.06, y: 6 }}
+						animate={{ opacity: 1, scale: 1, y: 0 }}
+						transition={{ duration: 0.35, ease: [0.25, 0.46, 0.45, 0.94] }}
+					>
+						<img src={banMaps[props.map]} style={{ display: "block" }} />
+
+						{/* Red flash overlay — stamps in then fades, giving impact to the ban */}
+						<motion.div
+							style={{
+								position: "absolute",
+								inset: 0,
+								background: "rgba(242, 84, 84, 0.55)",
+								pointerEvents: "none",
+							}}
+							initial={{ opacity: 0 }}
+							animate={{ opacity: [0, 0.7, 0] }}
+							transition={{ duration: 0.5, delay: 0.25, times: [0, 0.2, 1] }}
+						/>
+					</motion.div>
+				)}
+			</AnimatePresence>
 		</div>
 	);
 }

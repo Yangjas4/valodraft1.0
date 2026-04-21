@@ -266,22 +266,24 @@ footer > p {
 #linkinput {
 	font-weight: 300;
 	font-size: 12px;
-	width: 750px;
-	margin-left: 45px;
-	border: 1px solid #a9a9a9;
-	border-radius: 6px;
-	background-color: #202020;
+	flex: 1;
+	border: 1px solid #3a3a3a;
+	border-right: none;
+	border-radius: 6px 0 0 6px;
+	background-color: #2a2a2a;
 	color: white;
 	padding-left: 10px;
+	outline: none;
+	height: 36px;
 }
 
 .link-container {
 	display: flex;
+	align-items: center;
+	margin: 0 45px;
+	gap: 0;
 }
 
-.link-container > img {
-	cursor: pointer;
-}
 
 .cancel-button {
 	display: flex;
@@ -514,5 +516,90 @@ path {
 	font-weight: 600;
 	font-size: 26.9425px;
 	cursor: pointer;
+}
+
+.bo3-container {
+	color: white;
+	font-weight: 500;
+	font-size: 17px;
+	margin: auto;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.bo3-container > h2 {
+	margin-bottom: 20px;
+	width: 1188px;
+}
+
+.bo3-mapui-container {
+	border: 1px solid #ffffff;
+	padding-top: 70px;
+	border-radius: 21px;
+	width: 1188px;
+	height: 490px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	color: white;
+}
+
+.bo3-mapui-container > h1 {
+	font-weight: 300;
+	font-size: 55px;
+	margin-top: 40px;
+	margin-bottom: 15px;
+}
+
+.bo3-pick-titles {
+	display: flex;
+	width: 1049px;
+	margin-top: 25px;
+}
+
+.bo3-pick-titles > h4 {
+	flex: 1;
+	text-align: left;
+	font-size: 13.7px;
+	font-weight: 300;
+	font-family: oswald;
+}
+
+.bo3-map-table {
+	height: 220px;
+}
+
+.cards-container-bo3 {
+	position: relative;
+	top: -215px;
+	display: flex;
+	width: 1049px;
+}
+
+.bo3-col {
+	flex: 1;
+	overflow: hidden;
+	padding: 5px 3px 0;
+}
+
+.bo3-card-wrap {
+	width: 100%;
+}
+
+.bo3-card-wrap .card-container {
+	width: 100%;
+}
+
+.bo3-card-wrap img {
+	width: 100%;
+	height: auto;
+	display: block;
+}
+
+.bo3-card-wrap .card-container > p {
+	font-size: 8px;
+	height: 20px;
+	top: -20px;
 }
 

@@ -7,48 +7,51 @@ import icebox from "../assets/Icebox.svg";
 import lotus from "../assets/Lotus.svg";
 import pearl from "../assets/Pearl.svg";
 import split from "../assets/Split.svg";
+import { motion, AnimatePresence } from "framer-motion";
 
+const mapImages = { ascent, bind, breeze, fracture, haven, icebox, lotus, pearl, split };
 
 export default function MapPickCard(props) {
-	let card;
-
-	switch (props.map) {
-		case "ascent":
-			card = ascent;
-			break;
-		case "bind":
-			card = bind;
-			break;
-		case "breeze":
-			card = breeze;
-			break;
-		case "fracture":
-			card = fracture;
-			break;
-		case "haven":
-			card = haven;
-			break;
-		case "icebox":
-			card = icebox;
-			break;
-		case "lotus":
-			card = lotus;
-			break;
-		case "pearl":
-			card = pearl;
-			break;
-		case "split":
-			card = split;
-			break;
-        default:
-            card = '';
-            break;
-	}
+	const card = mapImages[props.map] ?? "";
 
 	return (
 		<div className="card-container">
-			<img src={card} />
-            {props.map != "" && <p>Team {props.defender.toUpperCase()} Picks Defender</p>}
+			<AnimatePresence>
+				{props.map !== "" && (
+					<motion.div
+						key={props.map}
+						style={{ position: "relative" }}
+						initial={{ opacity: 0, scale: 1.06, y: 6 }}
+						animate={{ opacity: 1, scale: 1, y: 0 }}
+						transition={{ duration: 0.35, ease: [0.25, 0.46, 0.45, 0.94] }}
+					>
+						<img src={card} style={{ display: "block" }} />
+
+						{/* White flash overlay fades out after card appears */}
+						<motion.div
+							style={{
+								position: "absolute",
+								inset: 0,
+								background: "white",
+								pointerEvents: "none",
+							}}
+							initial={{ opacity: 0.55 }}
+							animate={{ opacity: 0 }}
+							transition={{ duration: 0.45, ease: "easeOut" }}
+						/>
+					</motion.div>
+				)}
+			</AnimatePresence>
+			{props.map !== "" && props.defender !== "" && (
+				<motion.p
+					initial={{ opacity: 0, x: -20 }}
+					animate={{ opacity: 1, x: 0 }}
+					transition={{ duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
+				>
+					Team {props.picker.toUpperCase()} picked{" "}
+					{props.picker === props.defender ? "Defender" : "Attacker"}
+				</motion.p>
+			)}
 		</div>
 	);
 }

@@ -86,10 +86,10 @@ export default function Bo2Picks(props) {
 							<MapBanCard map={props.ban2} />
 						</div>
 						<div className="pick1 card">
-							<MapPickCard map={props.map1} defender={props.defender1} />
+							<MapPickCard map={props.map1} defender={props.defender1} picker="b" />
 						</div>
 						<div className="pick2 card">
-							<MapPickCard map={props.map2} defender={props.defender2} />
+							<MapPickCard map={props.map2} defender={props.defender2} picker="a" />
 						</div>
 					</div>
 				</div>
