@@ -90,8 +90,8 @@ nav {
 
 .sidenavbar {
 	width: 550px;
-	height: 100%;
-	position: absolute;
+	height: 100vh;
+	position: fixed;
 	top: 0px;
 	right: -300px;
 	background-color: #f25454;
