@@ -5,7 +5,7 @@ const io = require('socket.io')(server, { cors: { origin: "*" } });
 const compMaps = ["bind", "breeze", "fracture", "haven", "lotus", "pearl", "split"]
 //mongoose
 const mongoose = require("mongoose");
-const uri = "mongodb+srv://yangjas4:Clipart7@valodraft.rkudkoy.mongodb.net/ValodraftDB?retryWrites=true&w=majority&appName=Valodraft";
+const uri = process.env.MONGODB_URI;
 const roomSchema = new mongoose.Schema({
     roomid: String,
     teamA: String,
@@ -33,7 +33,7 @@ connectDB()
 
 mongoose.connection.once('open', () => {
     console.log("connected to MongoDB");
-    server.listen(3001, () => {
+    server.listen(process.env.PORT || 3001, () => {
         console.log("SERVER IS RUNNING");
     })
 })
